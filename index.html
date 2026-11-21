@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Made with Loops — Handcrafted Crochet & PDF Patterns</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Standalone Local Stylesheet (Guarantees proper styling offline and without CDN delay) -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            linen: '#FAF7F2',
+            surface: '#FFFFFF',
+            terracotta: {
+              DEFAULT: '#C86D51',
+              hover: '#B55D42',
+              light: '#F8ECE8'
+            },
+            sage: {
+              DEFAULT: '#7D9684',
+              hover: '#6B8372',
+              light: '#EDF2EE'
+            },
+            coffee: '#282523',
+            sand: '#EFEAE1'
+          },
+          fontFamily: {
+            serif: ['Fraunces', 'serif'],
+            sans: ['Plus Jakarta Sans', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #FAF7F2;
+      color: #282523;
+    }
+    .badge-blur {
+      backdrop-filter: blur(8px);
+      background-color: rgba(255, 255, 255, 0.85);
+    }
+  </style>
+</head>
+<body class="font-sans antialiased selection:bg-terracotta selection:text-white">
+
+  <!-- 1. Top Announcement Bar -->
+  <div class="bg-terracotta text-white text-xs sm:text-sm py-2 px-4 text-center font-medium tracking-wide flex items-center justify-center gap-2">
+    <span>🧶</span>
+    <span><strong>Next Artisan Drop:</strong> Friday at 5 PM EST • Free shipping over $60 • Instant PDF downloads</span>
+  </div>
+
+  <!-- 2. Sticky Navigation Bar -->
+  <header class="sticky top-0 z-40 bg-linen/90 backdrop-blur-md border-b border-sand">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-2 group">
+        <div class="w-10 h-10 rounded-full bg-terracotta-light flex items-center justify-center text-terracotta group-hover:scale-110 transition-transform">
+          <i data-lucide="scissors" class="w-5 h-5 rotate-45"></i>
+        </div>
+        <div>
+          <span class="font-serif text-2xl font-bold tracking-tight text-coffee">Made with Loops</span>
+          <span class="block text-[10px] uppercase tracking-widest text-sage font-bold -mt-1">Handmade Studio</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-coffee/80">
+        <a href="#shop" class="hover:text-terracotta transition-colors">Shop</a>
+        <a href="#patterns" onclick="goToPatterns(event)" class="hover:text-terracotta transition-colors flex items-center gap-1">
+          <span>PDF Patterns</span>
+          <span class="bg-terracotta-light text-terracotta text-[10px] px-1.5 py-0.5 rounded-full font-bold">New</span>
+        </a>
+        <a href="#tools" class="hover:text-terracotta transition-colors flex items-center gap-1">
+          <span>Row Counter</span>
+          <span class="bg-sage text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">Tool</span>
+        </a>
+        <a href="#custom" class="hover:text-terracotta transition-colors">Custom Orders</a>
+        <a href="#about" class="hover:text-terracotta transition-colors">Our Story</a>
+      </nav>
+
+      <!-- Nav Actions -->
+      <div class="flex items-center gap-3">
+        <button onclick="toggleCommissionModal(true)" class="hidden sm:inline-flex items-center gap-1.5 bg-sage text-white px-4 py-2 rounded-full text-xs font-semibold hover:bg-sage-hover transition-colors shadow-sm">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+          Request Custom
+        </button>
+
+        <!-- Cart Button with Counter -->
+        <button onclick="toggleCart(true)" class="relative p-2.5 rounded-full bg-white border border-sand hover:border-terracotta text-coffee hover:text-terracotta transition-all shadow-sm">
+          <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+          <span id="cart-badge" class="absolute -top-1 -right-1 bg-terracotta text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
+        </button>
+
+        <!-- Mobile Menu Hamburger Button -->
+        <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden p-2.5 rounded-full bg-white border border-sand hover:border-terracotta text-coffee transition-all shadow-sm" aria-label="Toggle Navigation">
+          <i id="mobile-menu-icon" data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer / Dropdown -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-sand bg-surface/98 px-6 py-5 space-y-4 shadow-lg transition-all">
+      <nav class="flex flex-col space-y-3 text-sm font-semibold text-coffee/90">
+        <a href="#shop" onclick="toggleMobileMenu(false)" class="hover:text-terracotta transition-colors py-1 flex items-center justify-between">
+          <span>Shop Collection</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-coffee/40"></i>
+        </a>
+        <a href="#patterns" onclick="goToPatterns(event); toggleMobileMenu(false)" class="hover:text-terracotta transition-colors py-1 flex items-center justify-between">
+          <span>PDF Patterns</span>
+          <span class="bg-terracotta-light text-terracotta text-[10px] px-2 py-0.5 rounded-full font-bold">Instant Download</span>
+        </a>
+        <a href="#tools" onclick="toggleMobileMenu(false)" class="hover:text-terracotta transition-colors py-1 flex items-center justify-between">
+          <span>Row Counter Tool</span>
+          <span class="bg-sage text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">Free</span>
+        </a>
+        <a href="#custom" onclick="toggleMobileMenu(false)" class="hover:text-terracotta transition-colors py-1 flex items-center justify-between">
+          <span>Custom Commissions</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-coffee/40"></i>
+        </a>
+        <a href="#about" onclick="toggleMobileMenu(false)" class="hover:text-terracotta transition-colors py-1 flex items-center justify-between">
+          <span>Our Story & Ethics</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-coffee/40"></i>
+        </a>
+      </nav>
+      <div class="pt-2 border-t border-sand">
+        <button onclick="toggleCommissionModal(true); toggleMobileMenu(false)" class="w-full inline-flex items-center justify-center gap-1.5 bg-sage text-white px-4 py-2.5 rounded-full text-xs font-semibold hover:bg-sage-hover transition-colors shadow-sm">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+          Request Custom Piece
+        </button>
+      </div>
+    </div>
+    </div>
+  </header>
+
+  <!-- 3. Hero Section -->
+  <section class="relative overflow-hidden py-12 md:py-20 lg:py-24 border-b border-sand">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Left Content -->
+        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-terracotta-light text-terracotta text-xs font-bold uppercase tracking-wider">
+            <span class="w-2 h-2 rounded-full bg-terracotta animate-pulse"></span>
+            Slow Fashion • 100% Organic Yarns
+          </div>
+
+          <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl text-coffee font-bold leading-[1.15]">
+            Handcrafted warmth, woven <span class="italic text-terracotta font-normal">one loop</span> at a time.
+          </h1>
+
+          <p class="text-coffee/70 text-base sm:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal">
+            Welcome to Made with Loops. We design cozy wearable knitwear, whimsical amigurumi plushies, and beginner-friendly digital PDF patterns for makers.
+          </p>
+
+          <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+            <a href="#shop" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-terracotta hover:bg-terracotta-hover text-white px-7 py-3.5 rounded-full font-semibold text-sm transition-all shadow-md hover:shadow-lg">
+              <span>Explore Collection</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+            <a href="#patterns" onclick="goToPatterns(event)" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white hover:bg-sand border border-sand text-coffee px-7 py-3.5 rounded-full font-semibold text-sm transition-colors shadow-sm">
+              <i data-lucide="download" class="w-4 h-4 text-sage"></i>
+              <span>Instant PDF Patterns</span>
+            </a>
+          </div>
+
+          <!-- Proof points -->
+          <div class="pt-6 grid grid-cols-3 gap-4 border-t border-sand max-w-md mx-auto lg:mx-0 text-left">
+            <div>
+              <div class="font-serif text-2xl font-bold text-coffee">4,800+</div>
+              <div class="text-xs text-coffee/60">Pieces Crafted</div>
+            </div>
+            <div>
+              <div class="font-serif text-2xl font-bold text-coffee">5.0 ★</div>
+              <div class="text-xs text-coffee/60">From 950+ Reviews</div>
+            </div>
+            <div>
+              <div class="font-serif text-2xl font-bold text-coffee">100%</div>
+              <div class="text-xs text-coffee/60">Plastic-Free Packaging</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Hero Visual Grid -->
+        <div class="lg:col-span-5 relative">
+          <div class="relative mx-auto max-w-md lg:max-w-none">
+            <!-- Decorative circle -->
+            <div class="absolute -top-8 -right-8 w-64 h-64 bg-sage-light rounded-full filter blur-2xl opacity-60"></div>
+            <div class="absolute -bottom-8 -left-8 w-64 h-64 bg-terracotta-light rounded-full filter blur-2xl opacity-60"></div>
+            
+            <div class="relative grid grid-cols-2 gap-4">
+              <div class="space-y-4">
+                <div class="relative rounded-2xl overflow-hidden shadow-md group">
+                  <img src="https://images.unsplash.com/photo-1615886753866-79396abc446e?q=80&w=800&auto=format&fit=crop" onerror="this.onerror=null; this.classList.add('img-fallback');" alt="Crochet Wool" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500">
+                  <span class="absolute bottom-2.5 left-2.5 badge-blur text-[11px] font-semibold text-coffee px-2 py-0.5 rounded-md">Natural Fibers</span>
+                </div>
+                <div class="relative rounded-2xl overflow-hidden shadow-md group">
+                  <img src="https://images.unsplash.com/photo-1584992236310-6edddc08acff?q=80&w=800&auto=format&fit=crop" onerror="this.onerror=null; this.classList.add('img-fallback');" alt="Crochet Plushie" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500">
+                  <span class="absolute bottom-2.5 left-2.5 badge-blur text-[11px] font-semibold text-coffee px-2 py-0.5 rounded-md">Cute Amigurumi</span>
+                </div>
+              </div>
+              <div class="space-y-4 pt-6">
+                <div class="relative rounded-2xl overflow-hidden shadow-md group">
+                  <img src="https://images.unsplash.com/photo-1599818451152-7b07f87f2e51?q=80&w=800&auto=format&fit=crop" onerror="this.onerror=null; this.classList.add('img-fallback');" alt="Handmade Blanket" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500">
+                  <span class="absolute bottom-2.5 left-2.5 badge-blur text-[11px] font-semibold text-coffee px-2 py-0.5 rounded-md">Granny Square Art</span>
+                </div>
+                <div class="bg-surface rounded-2xl p-4 border border-sand shadow-sm text-center">
+                  <div class="w-9 h-9 rounded-full bg-sage-light text-sage mx-auto flex items-center justify-center mb-2">
+                    <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+                  </div>
+                  <div class="font-serif text-sm font-bold text-coffee">Crafted With Care</div>
+                  <div class="text-[11px] text-coffee/60">Every stitch placed by human hands.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Shop / Collection Section -->
+  <section id="shop" class="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+      <div>
+        <span class="text-xs uppercase font-bold tracking-widest text-terracotta">Handmade Drops</span>
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-coffee mt-1">Explore Made with Loops</h2>
+      </div>
+
+      <!-- Category Filter Tabs -->
+      <div class="flex flex-wrap gap-2" id="filter-tabs">
+        <button onclick="filterCategory(event, 'all')" class="filter-btn active bg-coffee text-white text-xs font-semibold px-4 py-2 rounded-full transition-all">All</button>
+        <button onclick="filterCategory(event, 'plushies')" class="filter-btn bg-white hover:bg-sand text-coffee border border-sand text-xs font-semibold px-4 py-2 rounded-full transition-all">Plushies</button>
+        <button onclick="filterCategory(event, 'wearables')" class="filter-btn bg-white hover:bg-sand text-coffee border border-sand text-xs font-semibold px-4 py-2 rounded-full transition-all">Wearables</button>
+        <button id="patterns" onclick="filterCategory(event, 'patterns')" class="filter-btn bg-white hover:bg-sand text-coffee border border-sand text-xs font-semibold px-4 py-2 rounded-full transition-all">PDF Patterns</button>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Injected via JavaScript -->
+    </div>
+  </section>
+
+  <!-- 5. Interactive Tool: The Crochet Row & Stitch Counter -->
+  <section id="tools" class="py-16 bg-surface border-y border-sand">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sage-light text-sage text-xs font-bold mb-3">
+        <i data-lucide="gauge" class="w-3.5 h-3.5"></i>
+        Free Interactive Maker Tool
+      </div>
+      <h2 class="font-serif text-3xl font-bold text-coffee">Digital Row & Stitch Counter</h2>
+      <p class="text-sm text-coffee/70 max-w-lg mx-auto mt-2">
+        Keep this tab open while you crochet your next project! Easily track your current row so you never lose count again.
+      </p>
+
+      <div class="mt-8 bg-linen border border-sand rounded-3xl p-6 sm:p-8 shadow-sm max-w-md mx-auto">
+        <div class="flex items-center justify-between border-b border-sand pb-4 mb-6">
+          <input type="text" id="counter-title" value="Current Project: Daisy Cardigan" oninput="saveCounterToStorage()" placeholder="Name your project..." class="bg-transparent font-medium text-sm text-coffee/80 focus:outline-none focus:border-b focus:border-terracotta w-full text-center">
+        </div>
+
+        <div class="py-4">
+          <span class="text-xs font-bold uppercase tracking-widest text-coffee/50">Current Row</span>
+          <div id="row-display" class="font-serif text-7xl font-bold text-coffee my-2 tracking-tight transition-transform">0</div>
+        </div>
+
+        <div class="flex items-center justify-center gap-4 mt-6">
+          <button onclick="changeRow(-1)" class="w-14 h-14 rounded-2xl bg-white border border-sand hover:border-terracotta text-coffee flex items-center justify-center text-xl font-bold shadow-sm active:scale-95 transition-all">
+            -
+          </button>
+          <button onclick="changeRow(1)" class="flex-1 h-14 rounded-2xl bg-terracotta hover:bg-terracotta-hover text-white flex items-center justify-center gap-2 text-lg font-bold shadow-md active:scale-95 transition-all">
+            <i data-lucide="plus" class="w-5 h-5"></i>
+            Next Row
+          </button>
+        </div>
+
+        <div class="flex justify-between items-center mt-6 pt-4 border-t border-sand text-xs text-coffee/60">
+          <button onclick="resetRow()" class="hover:text-terracotta underline">Reset Counter</button>
+          <span id="saved-status">Auto-saved in browser</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Custom Commissions Request Section -->
+  <section id="custom" class="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-gradient-to-br from-terracotta-light/60 to-sage-light/60 border border-sand rounded-3xl p-8 sm:p-12 lg:p-16 flex flex-col md:flex-row items-center justify-between gap-8">
+      <div class="space-y-4 max-w-xl text-center md:text-left">
+        <span class="text-xs uppercase font-bold tracking-widest text-terracotta">Custom Commissions</span>
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-coffee leading-tight">
+          Have a dream piece in mind? We'll loop it to life.
+        </h2>
+        <p class="text-coffee/70 text-sm sm:text-base">
+          From custom amigurumi of your pets to tailor-fit color-block cardigans, each custom commission is uniquely hand-crocheted for you.
+        </p>
+        <div class="flex flex-wrap gap-4 pt-2 justify-center md:justify-start">
+          <div class="flex items-center gap-1.5 text-xs font-semibold text-coffee">
+            <i data-lucide="check" class="w-4 h-4 text-sage"></i> Choice of 40+ Yarn Shades
+          </div>
+          <div class="flex items-center gap-1.5 text-xs font-semibold text-coffee">
+            <i data-lucide="check" class="w-4 h-4 text-sage"></i> Progress Photo Updates
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full md:w-auto">
+        <button onclick="toggleCommissionModal(true)" class="w-full md:w-auto bg-coffee hover:bg-coffee/90 text-white px-8 py-4 rounded-full font-semibold text-sm transition-all shadow-md flex items-center justify-center gap-2">
+          <i data-lucide="palette" class="w-4 h-4 text-terracotta"></i>
+          <span>Open Custom Order Form</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Maker Story & Ethics -->
+  <section id="about" class="py-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-10 items-center">
+      <div class="md:col-span-5">
+        <div class="relative">
+          <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=800&auto=format&fit=crop" onerror="this.onerror=null; this.classList.add('img-fallback');" alt="Crochet Maker" class="rounded-3xl shadow-md w-full object-cover h-96">
+          <div class="absolute -bottom-4 -right-4 bg-surface p-4 rounded-2xl border border-sand shadow-sm text-xs font-serif italic text-coffee">
+            "Stitching comfort into every thread."
+          </div>
+        </div>
+      </div>
+
+      <div class="md:col-span-7 space-y-4">
+        <span class="text-xs uppercase font-bold tracking-widest text-sage">The Artisan Studio</span>
+        <h2 class="font-serif text-3xl font-bold text-coffee">About Made with Loops</h2>
+        <p class="text-coffee/75 text-sm sm:text-base leading-relaxed">
+          Made with Loops began as a quiet mindfulness practice in a small studio corner. In a world full of mass-produced fast fashion, we believe in the quiet power of human hands and thoughtful craftsmanship.
+        </p>
+        <p class="text-coffee/75 text-sm sm:text-base leading-relaxed">
+          Every amigurumi animal, bucket hat, and cardigan is crafted using 100% natural cotton or ethically sourced merino wool. When you buy from us, you're holding something that took hours of dedicated care and love.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Newsletter Section -->
+  <section class="py-16 bg-surface border-t border-sand">
+    <div class="max-w-xl mx-auto px-4 text-center">
+      <div class="w-12 h-12 bg-terracotta-light text-terracotta rounded-full flex items-center justify-center mx-auto mb-4">
+        <i data-lucide="mail" class="w-5 h-5"></i>
+      </div>
+      <h3 class="font-serif text-2xl sm:text-3xl font-bold text-coffee">Join the Loops Club</h3>
+      <p class="text-sm text-coffee/70 mt-2 mb-6">
+        Get 15% off your first handcrafted order + receive our exclusive <strong>Free Beginner Daisy Square PDF Pattern</strong> right now.
+      </p>
+
+      <form onsubmit="handleNewsletter(event)" class="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
+        <input type="email" required placeholder="Enter your email address" class="flex-1 px-4 py-3 rounded-full border border-sand bg-linen text-sm focus:outline-none focus:border-terracotta">
+        <button type="submit" class="bg-terracotta hover:bg-terracotta-hover text-white px-6 py-3 rounded-full text-sm font-semibold transition-colors">
+          Subscribe
+        </button>
+      </form>
+      <p id="newsletter-success" class="hidden text-xs text-sage font-bold mt-3">🎉 Thank you! Check your inbox for your free PDF pattern.</p>
+    </div>
+  </section>
+
+  <!-- 9. Footer -->
+  <footer class="bg-linen py-12 border-t border-sand text-xs text-coffee/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-6">
+      <div class="flex items-center gap-2">
+        <span class="font-serif font-bold text-coffee text-base">Made with Loops</span>
+        <span>© 2026. All rights reserved.</span>
+      </div>
+      <div class="flex items-center gap-6">
+        <a href="#shop" class="hover:text-terracotta">Shop</a>
+        <a href="#patterns" class="hover:text-terracotta">PDF Patterns</a>
+        <a href="#custom" class="hover:text-terracotta">Commissions</a>
+        <a href="#tools" class="hover:text-terracotta">Row Counter</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 10. Slide-Over Cart Drawer -->
+  <div id="cart-drawer-overlay" onclick="toggleCart(false)" class="fixed inset-0 bg-coffee/40 backdrop-blur-sm z-50 hidden transition-opacity"></div>
+  <div id="cart-drawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-surface shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
+    <!-- Cart Header -->
+    <div class="p-6 border-b border-sand flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <i data-lucide="shopping-bag" class="w-5 h-5 text-terracotta"></i>
+        <h3 class="font-serif text-lg font-bold text-coffee">Your Cart</h3>
+        <span id="cart-count-title" class="text-xs bg-sand px-2 py-0.5 rounded-full font-bold text-coffee">0 items</span>
+      </div>
+      <button onclick="toggleCart(false)" class="p-1 rounded-full hover:bg-sand text-coffee">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- Cart Items List -->
+    <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4">
+      <div id="cart-empty" class="text-center py-16 text-coffee/60">
+        <i data-lucide="package-open" class="w-12 h-12 mx-auto mb-3 text-sand"></i>
+        <p class="text-sm font-medium">Your cart is currently empty</p>
+        <button onclick="toggleCart(false)" class="mt-4 text-xs font-bold text-terracotta underline">Start browsing drops</button>
+      </div>
+    </div>
+
+    <!-- Cart Footer / Checkout -->
+    <div class="p-6 border-t border-sand bg-linen/50 space-y-4">
+      <div class="flex justify-between text-sm">
+        <span class="text-coffee/70">Estimated Subtotal:</span>
+        <span id="cart-subtotal" class="font-bold text-coffee text-base">$0.00</span>
+      </div>
+      <p class="text-[11px] text-coffee/50 text-center">Taxes and shipping calculated at checkout. Instant PDF patterns sent by email.</p>
+      <button onclick="simulateCheckout()" class="w-full bg-terracotta hover:bg-terracotta-hover text-white py-3.5 rounded-full font-semibold text-sm transition-all shadow-md">
+        Proceed to Checkout
+      </button>
+    </div>
+  </div>
+
+  <!-- 11. Custom Order Modal -->
+  <div id="custom-modal" class="fixed inset-0 bg-coffee/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-surface rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative border border-sand">
+      <button onclick="toggleCommissionModal(false)" class="absolute top-5 right-5 p-1 rounded-full hover:bg-sand text-coffee">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <span class="text-xs uppercase font-bold tracking-widest text-terracotta">Custom Commission</span>
+      <h3 class="font-serif text-2xl font-bold text-coffee mt-1 mb-2">Build Your Custom Piece</h3>
+      <p class="text-xs text-coffee/70 mb-6">Tell us what you'd love crocheted. We review requests weekly.</p>
+
+      <form onsubmit="handleCommissionSubmit(event)" class="space-y-4 text-left">
+        <div>
+          <label class="block text-xs font-bold text-coffee mb-1">What kind of piece?</label>
+          <select class="w-full bg-linen border border-sand rounded-xl px-3.5 py-2.5 text-xs text-coffee focus:outline-none focus:border-terracotta">
+            <option>Amigurumi Custom Pet Plushie</option>
+            <option>Granny Square Cardigan / Sweater</option>
+            <option>Crochet Tote Bag / Bucket Hat</option>
+            <option>Custom Baby Blanket</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-coffee mb-1">Preferred Color Palette</label>
+          <input type="text" placeholder="e.g. Sage green, pastel cream, mustard yellow" class="w-full bg-linen border border-sand rounded-xl px-3.5 py-2.5 text-xs text-coffee focus:outline-none focus:border-terracotta">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-coffee mb-1">Your Email</label>
+          <input type="email" required placeholder="name@example.com" class="w-full bg-linen border border-sand rounded-xl px-3.5 py-2.5 text-xs text-coffee focus:outline-none focus:border-terracotta">
+        </div>
+        <button type="submit" class="w-full bg-coffee hover:bg-coffee/90 text-white py-3 rounded-full text-xs font-bold transition-colors">
+          Send Commission Request
+        </button>
+      </form>
+      <div id="modal-success" class="hidden text-center text-xs text-sage font-bold mt-3">
+        ✨ Request received! We'll reply within 24 hours.
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Logic -->
+  <script>
+    // Products Data
+    const products = [
+      {
+        id: 1,
+        title: "Daisy Daydream Bucket Hat",
+        category: "wearables",
+        price: 42.00,
+        badge: "Drop Bestseller",
+        tag: "100% Cotton",
+        image: "https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        id: 2,
+        title: "Matcha Bear Amigurumi",
+        category: "plushies",
+        price: 36.00,
+        badge: "Limited (3 Left)",
+        tag: "Hypoallergenic",
+        image: "https://images.unsplash.com/photo-1584992236310-6edddc08acff?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        id: 3,
+        title: "Sunset Granny Square Tote",
+        category: "wearables",
+        price: 54.00,
+        badge: "Hand-Lined",
+        tag: "Natural Wool",
+        image: "https://images.unsplash.com/photo-1599818451152-7b07f87f2e51?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        id: 4,
+        title: "Cloud Puff Cardigan Pattern (PDF)",
+        category: "patterns",
+        price: 8.50,
+        badge: "Instant Download",
+        tag: "Beginner Friendly",
+        image: "https://images.unsplash.com/photo-1615886753866-79396abc446e?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        id: 5,
+        title: "Honey Bee Plushie Duo",
+        category: "plushies",
+        price: 32.00,
+        badge: "Popular Gift",
+        tag: "Plush Velvet Yarn",
+        image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=800&auto=format&fit=crop"
+      },
+      {
+        id: 6,
+        title: "Ribbed Beanie Pattern (PDF)",
+        category: "patterns",
+        price: 6.00,
+        badge: "Instant Download",
+        tag: "Step-by-Step Video",
+        image: "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?q=80&w=800&auto=format&fit=crop"
+      }
+    ];
+
+    let cart = [];
+
+    // Safe Lucide icon initializer
+    function safeCreateIcons() {
+      try {
+        if (typeof lucide !== 'undefined' && lucide && typeof lucide.createIcons === 'function') {
+          lucide.createIcons();
+        }
+      } catch (err) {
+        console.warn('Lucide icons could not be rendered:', err);
+      }
+    }
+
+    // Default SVG placeholder fallback for offline or broken images
+    const placeholderSVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'><rect width='400' height='400' fill='%23FAF7F2'/><rect x='20' y='20' width='360' height='360' rx='16' fill='%23EFEAE1' stroke='%23D8CFBF' stroke-dasharray='6,6'/><text x='50%25' y='48%25' dominant-baseline='middle' text-anchor='middle' font-family='serif' font-size='20' fill='%23C86D51'>Made with Loops</text><text x='50%25' y='58%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='12' fill='%237D9684'>Handmade Crochet</text></svg>";
+
+    // Render Products
+    function renderProducts(items) {
+      const grid = document.getElementById('product-grid');
+      if (!grid) return;
+      grid.innerHTML = items.map(p => `
+        <div class="product-card bg-surface rounded-2xl border border-sand overflow-hidden flex flex-col group hover:shadow-md transition-all">
+          <div class="product-img-wrap relative overflow-hidden aspect-square bg-linen">
+            <img src="${p.image}" alt="${p.title}" onerror="this.onerror=null; this.src='${placeholderSVG}';" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-[11px] font-bold text-coffee px-2.5 py-1 rounded-full shadow-sm">
+              ${p.badge}
+            </span>
+          </div>
+          <div class="p-4 flex-1 flex flex-col justify-between">
+            <div>
+              <span class="text-[10px] uppercase font-bold tracking-wider text-sage">${p.tag}</span>
+              <h4 class="font-serif text-base font-bold text-coffee mt-0.5 line-clamp-1">${p.title}</h4>
+            </div>
+            <div class="mt-4 flex items-center justify-between pt-2 border-t border-sand">
+              <span class="font-bold text-coffee text-base">$${p.price.toFixed(2)}</span>
+              <button onclick="addToCart(${p.id})" class="inline-flex items-center gap-1.5 bg-linen hover:bg-terracotta hover:text-white border border-sand hover:border-terracotta text-coffee px-3 py-1.5 rounded-full text-xs font-semibold transition-all">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                Add
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      safeCreateIcons();
+    }
+
+    // Mobile Navigation Drawer Toggle
+    function toggleMobileMenu(forceState) {
+      const menu = document.getElementById('mobile-menu');
+      const icon = document.getElementById('mobile-menu-icon');
+      if (!menu) return;
+      const isCurrentlyOpen = !menu.classList.contains('hidden');
+      const shouldOpen = forceState !== undefined ? forceState : !isCurrentlyOpen;
+
+      if (shouldOpen) {
+        menu.classList.remove('hidden');
+        if (icon) icon.setAttribute('data-lucide', 'x');
+      } else {
+        menu.classList.add('hidden');
+        if (icon) icon.setAttribute('data-lucide', 'menu');
+      }
+      safeCreateIcons();
+    }
+
+    // PDF Patterns Navigation with Auto-Filter
+    function goToPatterns(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const shopSection = document.getElementById('shop');
+      if (shopSection) {
+        shopSection.scrollIntoView({ behavior: 'smooth' });
+      }
+      filterCategory(null, 'patterns');
+    }
+
+    // Filter Categories
+    function filterCategory(e, cat) {
+      const target = e ? (e.currentTarget || e.target) : null;
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active', 'bg-coffee', 'text-white');
+        btn.classList.add('bg-white', 'text-coffee');
+      });
+
+      if (target) {
+        target.classList.add('active', 'bg-coffee', 'text-white');
+        target.classList.remove('bg-white');
+      } else {
+        // Find matching filter button programmatically
+        const matchingBtn = (cat === 'patterns') 
+          ? document.getElementById('patterns') 
+          : document.querySelector(`.filter-btn[onclick*="'${cat}'"]`);
+        if (matchingBtn) {
+          matchingBtn.classList.add('active', 'bg-coffee', 'text-white');
+          matchingBtn.classList.remove('bg-white');
+        }
+      }
+
+      if (cat === 'all') {
+        renderProducts(products);
+      } else {
+        const filtered = products.filter(p => p.category === cat);
+        renderProducts(filtered);
+      }
+    }
+
+    // Cart LocalStorage Persistence
+    function saveCartToStorage() {
+      try {
+        localStorage.setItem('made_with_loops_cart', JSON.stringify(cart));
+      } catch (err) {
+        console.warn('Failed to save cart to localStorage:', err);
+      }
+    }
+
+    function loadCartFromStorage() {
+      try {
+        const saved = localStorage.getItem('made_with_loops_cart');
+        if (saved) {
+          cart = JSON.parse(saved);
+        }
+      } catch (err) {
+        console.warn('Failed to load cart from localStorage:', err);
+      }
+    }
+
+    // Cart Drawer Operations
+    function toggleCart(open) {
+      const drawer = document.getElementById('cart-drawer');
+      const overlay = document.getElementById('cart-drawer-overlay');
+      if (open) {
+        overlay.classList.remove('hidden');
+        drawer.classList.remove('translate-x-full');
+      } else {
+        overlay.classList.add('hidden');
+        drawer.classList.add('translate-x-full');
+      }
+    }
+
+    function addToCart(productId) {
+      const item = products.find(p => p.id === productId);
+      if (!item) return;
+      const existing = cart.find(c => c.id === productId);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ ...item, qty: 1 });
+      }
+      saveCartToStorage();
+      updateCartUI();
+      toggleCart(true);
+    }
+
+    function removeCartItem(productId) {
+      cart = cart.filter(c => c.id !== productId);
+      saveCartToStorage();
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      const badge = document.getElementById('cart-badge');
+      const titleCount = document.getElementById('cart-count-title');
+      const itemsContainer = document.getElementById('cart-items');
+      const subtotalEl = document.getElementById('cart-subtotal');
+
+      const totalCount = cart.reduce((acc, c) => acc + c.qty, 0);
+      if (badge) badge.textContent = totalCount;
+      if (titleCount) titleCount.textContent = `${totalCount} item${totalCount === 1 ? '' : 's'}`;
+
+      if (cart.length === 0) {
+        itemsContainer.innerHTML = `
+          <div id="cart-empty" class="text-center py-16 text-coffee/60">
+            <i data-lucide="package-open" class="w-12 h-12 mx-auto mb-3 text-sand"></i>
+            <p class="text-sm font-medium">Your cart is currently empty</p>
+          </div>
+        `;
+        if (subtotalEl) subtotalEl.textContent = '$0.00';
+      } else {
+        let subtotal = 0;
+        itemsContainer.innerHTML = cart.map(item => {
+          subtotal += item.price * item.qty;
+          return `
+            <div class="flex items-center gap-3 p-3 bg-linen rounded-xl border border-sand">
+              <img src="${item.image}" alt="${item.title}" onerror="this.onerror=null; this.src='${placeholderSVG}';" class="w-14 h-14 object-cover rounded-lg">
+              <div class="flex-1 min-w-0">
+                <h5 class="text-xs font-bold text-coffee truncate">${item.title}</h5>
+                <span class="text-xs text-coffee/70">$${item.price.toFixed(2)} × ${item.qty}</span>
+              </div>
+              <button onclick="removeCartItem(${item.id})" class="text-coffee/40 hover:text-terracotta p-1">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </div>
+          `;
+        }).join('');
+        if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+      }
+      safeCreateIcons();
+    }
+
+    function simulateCheckout() {
+      if (cart.length === 0) {
+        alert("Your cart is empty! Add a cozy loop item first.");
+        return;
+      }
+      alert("✨ Mock Checkout: Redirecting to secure Stripe payment gateway for Made with Loops!");
+    }
+
+    // Row Counter Logic with LocalStorage Persistence
+    let rowCount = 0;
+
+    function saveCounterToStorage() {
+      try {
+        localStorage.setItem('made_with_loops_row_count', rowCount);
+        const titleInput = document.getElementById('counter-title');
+        if (titleInput) {
+          localStorage.setItem('made_with_loops_project_name', titleInput.value);
+        }
+        const statusEl = document.getElementById('saved-status');
+        if (statusEl) {
+          statusEl.textContent = 'Saved in browser ✓';
+          setTimeout(() => {
+            statusEl.textContent = 'Auto-saved in browser';
+          }, 1500);
+        }
+      } catch (err) {
+        console.warn('Storage error:', err);
+      }
+    }
+
+    function loadCounterFromStorage() {
+      try {
+        const savedCount = localStorage.getItem('made_with_loops_row_count');
+        if (savedCount !== null) {
+          rowCount = parseInt(savedCount, 10) || 0;
+          const display = document.getElementById('row-display');
+          if (display) display.textContent = rowCount;
+        }
+        const savedTitle = localStorage.getItem('made_with_loops_project_name');
+        if (savedTitle !== null) {
+          const titleInput = document.getElementById('counter-title');
+          if (titleInput) titleInput.value = savedTitle;
+        }
+      } catch (err) {
+        console.warn('Storage error:', err);
+      }
+    }
+
+    function changeRow(delta) {
+      rowCount = Math.max(0, rowCount + delta);
+      const display = document.getElementById('row-display');
+      if (display) {
+        display.textContent = rowCount;
+        display.classList.add('scale-110');
+        setTimeout(() => display.classList.remove('scale-110'), 150);
+      }
+      saveCounterToStorage();
+    }
+
+    function resetRow() {
+      if (confirm("Reset current row count to 0?")) {
+        rowCount = 0;
+        const display = document.getElementById('row-display');
+        if (display) display.textContent = 0;
+        saveCounterToStorage();
+      }
+    }
+
+    // Commission Modal Logic
+    function toggleCommissionModal(show) {
+      const modal = document.getElementById('custom-modal');
+      if (show) modal.classList.remove('hidden');
+      else modal.classList.add('hidden');
+    }
+
+    function handleCommissionSubmit(e) {
+      e.preventDefault();
+      document.getElementById('modal-success').classList.remove('hidden');
+      setTimeout(() => {
+        toggleCommissionModal(false);
+        document.getElementById('modal-success').classList.add('hidden');
+      }, 2000);
+    }
+
+    // Newsletter
+    function handleNewsletter(e) {
+      e.preventDefault();
+      document.getElementById('newsletter-success').classList.remove('hidden');
+    }
+
+    // Initialize Application
+    window.onload = () => {
+      loadCartFromStorage();
+      loadCounterFromStorage();
+      renderProducts(products);
+      updateCartUI();
+
+      // Check if URL hash is #patterns on load
+      if (window.location.hash === '#patterns') {
+        goToPatterns();
+      }
+
+      safeCreateIcons();
+    };
+  </script>
+</body>
+</html>
